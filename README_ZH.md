@@ -46,7 +46,7 @@
   db_host = "localhost"        # MySQL主机
   db_port = 3306               # MySQL端口
   db_user = "strawcris"        # MySQL用户名
-  db_passwd = "Lv589398#"      # 该用户的密码
+  db_passwd = "password"      # 该用户的密码
   db_name = "strawcriserp"     # 数据库名
   ```
 5. 启动
