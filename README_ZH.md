@@ -46,7 +46,7 @@
   db_host = "localhost"        # MySQL主机
   db_port = 3306               # MySQL端口
   db_user = "strawcris"        # MySQL用户名
-  db_passwd = "password"      # 该用户的密码
+  db_passwd = "password"       # 该用户的密码
   db_name = "strawcriserp"     # 数据库名
   ```
 5. 启动
@@ -77,5 +77,8 @@
 系统将会帮助您对比哪些物料您有库存，哪些没有或者数量不够，之后您可以选择从库存中扣除BOM表中元件对应的库存。  
 当然，您也可以单个取出物料。填入MPN（或扫码）和所需数量，点击提交即可。  
 ![取出页面](/images/checkout.png)
+### Admin Panel
+在管理员面板中，您可以新建或删除用户，或修改用户权限。Admin用户拥有最高权限可以管理用户，User用户可以对数据进行修改，Guest只能观看数据（只读）  
+![管理员面板](/images/adminpanel.png)
 ## 后记
 欢迎尝试！如果有什么问题烦请提交issues，与我们共同改进这个项目。谢谢您！
