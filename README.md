@@ -1,5 +1,6 @@
 # StrawCrisERP - A Simple Inventory Management System for Small-Scale Electronic Components
 
+[简体中文](README_ZH.md)
 This is an inventory management system for electronic components built using the Python **Quart** framework. It uses the **AdminLTE** frontend template and the **HTML5 QR Code** library to implement QR code scanning functionality.
 
 The system allows easy management of inventory, supports scanning to add components (currently only supports labels from LCSC and Digi-Key), filtering inventory components, editing information, retrieving components one by one, and comparing with BOM (Bill of Materials).
