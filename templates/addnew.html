@@ -1,0 +1,505 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New{% endblock %}
+
+{% block position %}
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item active">Add New</li>
+{% endblock %}
+
+{% block page %}Add New Material{% endblock %}
+
+{% block sidebar %}
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Check
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/" class="nav-link">
+                  <i class="nav-icon fas fa-th"></i>
+                  <p>Home</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/search" class="nav-link">
+                  <i class="nav-icon fas fa-search"></i>
+                  <p>Search for Material</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/viewall" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>View All</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/addnew" class="nav-link active">
+                  <i class="far fa-plus-square nav-icon"></i>
+                  <p>Add New Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/edit" class="nav-link">
+                  <i class="far fa-edit nav-icon"></i>
+                  <p>Edit Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/checkout" class="nav-link">
+                  <i class="far fa-file nav-icon"></i>
+                  <p>Check Out</p>
+                </a>
+              </li>
+            </ul>
+
+          </li>
+
+        </ul>
+      </nav>
+{% endblock %}
+
+{% block main %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-6">
+              <div class="card card-info">
+    <div class="card-header">
+        <h3 class="card-title">Add New Material</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+        <form id="file-path-form">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="m_name" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="m_name" name="m_name" placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="m_class" class="col-sm-2 col-form-label">Class</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="m_class" name="m_class" placeholder="Classification">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="footprint" class="col-sm-2 col-form-label">Footprint</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="footprint" name="footprint" placeholder="Footprint">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="quantity" class="col-sm-2 col-form-label">Quantity</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="quantity" name="quantity" placeholder="How many have you bought?">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="mpn" class="col-sm-2 col-form-label">MPN</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="mpn" name="mpn" placeholder="# Manufacture Part Number">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="manufacture" class="col-sm-2 col-form-label">Manufacture</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="manufacture" name="manufacture" placeholder="Manufacture of this material">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="spn" class="col-sm-2 col-form-label">SPN</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="spn" name="spn" placeholder="# Supplier Part Number">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="supplier" class="col-sm-2 col-form-label">Supplier</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="supplier" name="supplier" placeholder="Where did you buy?">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="position" class="col-sm-2 col-form-label">Position</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="position" name="position" placeholder="Where in the warehouse?">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="user_comment" class="col-sm-2 col-form-label">Comments</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="user_comment" name="user_comment" placeholder="Wanna say something?">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="buy_time" class="col-sm-2 col-form-label">Buy Time</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="buy_time" name="buy_time" placeholder="When did you buy?">
+                    </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <!-- <button type="submit" id="submit1" class="btn btn-info">提交</button> -->
+                    <button class="btn btn-info" type="button" onclick="submitTable()">Submit</button>
+                </div>
+                </div>
+        </form>
+
+                <!-- /.card-footer -->
+    </div>
+    </div>
+
+        <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">QR Scanner</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                  <p>Try to scan the QR code on the bag. Auto-fill can help you </p>
+                  <p>We now support: </p>
+                  <p>- LCSC</p>
+                  <p>- Digikey</p>
+                  <br>
+                  <button class="btn btn-primary" onclick="scanQRcode()">QR Scanner</button>
+              </div>
+          <!-- /.col-md-6 -->
+          <!-- /.col-md-6 -->
+        </div>
+            <!-- /.card -->
+          <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Upload</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                  <p>Bought many materials in one time? Don't Worry!</p>
+                  <p>Try to upload the bill of materials (.xlsx), we can help you handle them.</p>
+                  <br>
+                  <button class="btn btn-outline-warning" onclick="updateNewData()">Upload</button>
+              </div>
+          <!-- /.col-md-6 -->
+          <!-- /.col-md-6 -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+
+</div>
+      </div>
+    </section>
+
+{% endblock %}
+{% block js %}
+<!-- DataTables  & Plugins -->
+<script src="{{ url_for('static', filename='plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<!-- Html5-QRCode -->
+<script src="{{ url_for('static', filename='plugins/html5-qrcode/html5-qrcode.min.js') }}"></script>
+
+<script>
+    function updateDocumentData(supplier, data){
+        console.log(supplier);
+        console.log(data);
+        Swal.fire({
+              title: 'Success!',
+              text: 'Successfully scanned the QR code',
+              icon: 'success'
+            });
+        const quantity = document.getElementById('quantity');
+        const mpn = document.getElementById('mpn');
+        const spn = document.getElementById('spn');
+        const supplier_name = document.getElementById('supplier');
+        const buy_time = document.getElementById('buy_time');
+        if(supplier === "LCSC"){
+            let str = data.replace(/[{}]/g, '');
+            // 使用逗号分隔每一对键值
+            let pairs = str.split(',');
+            // 遍历每一对键值，查找 'pc'
+            let pcValue = '';
+            let qtyValue = '';
+            let pmValue = '';
+            let onValue = '';
+            for (let pair of pairs) {
+              let [key, value] = pair.split(':');  // 将每对键值分开
+              if (key === 'pc') {
+                pcValue = value;  // 找到pc对应的值
+              }
+              if (key === 'on') {
+                onValue = value;  // 找到pc对应的值
+              }
+              if (key === 'pm') {
+                pmValue = value;  // 找到pc对应的值
+              }
+              if (key === 'qty') {
+                qtyValue = value;  // 找到pc对应的值
+              }
+            }
+            quantity.value = qtyValue;
+            mpn.value = pmValue;
+            supplier_name.value = supplier;
+            spn.value = pcValue;
+            buy_time.value = onValue.replace(/^SO(\d{6})\d*/, '$1');
+            // 输出结果
+            console.log(pcValue);
+        }
+        if(supplier === "Digikey"){
+            // 替换控制字符 GS (ASCII 29) 为一个可识别的分隔符
+            let cleanString = data.replace(/\x1d/g, ',');  // 逗号替代
+            let fields = cleanString.split(',');
+            let field1P = '';  // MPN
+            let field30P = '';  // SPN
+            let fieldQ = '';  // Quantity
+            fields.forEach(field => {
+              if (field.startsWith('1P')) {
+                field1P = field.substring(2);  // 去掉开头的 "1P"
+              } else if (field.startsWith('30P')) {
+                field30P = field.substring(3);  // 去掉开头的 "30P"
+              } else if (field.startsWith('Q')) {
+                fieldQ = field.substring(1);  // 去掉开头的Q
+              }
+            });
+            console.log('Field starting with 1P:', field1P);
+            console.log('Field starting with 30P:', field30P);
+            console.log('Field starting with Q:', fieldQ);
+            quantity.value = fieldQ;
+            mpn.value = field1P;
+            supplier_name.value = supplier;
+            spn.value = field30P;
+        }
+    }
+
+    function scanQRcode() {
+        let html5QrCode; // 声明一个全局变量，保存二维码扫描实例
+        Swal.fire({
+            title: 'Scan for QR Code',
+            html: `
+                <select id="supplier-selected" class="swal2-select">
+                    <option value="LCSC">LCSC</option>
+                    <option value="Digikey">Digikey</option>
+                </select>
+                <div id="qr-reader" style="width: 100%; height: 300px;"></div>
+            `,
+            showCancelButton: true,
+            showConfirmButton: false,
+            willOpen: () => {
+                const supplierSelect = document.getElementById('supplier-selected');
+                let QRformat = Html5QrcodeSupportedFormats.QR_CODE; // 默认格式为 QR_CODE
+
+                // 监听下拉栏选择变化
+                supplierSelect.addEventListener('change', () => {
+                    const supplier = supplierSelect.value;
+                    if (supplier === "LCSC") {
+                        QRformat = Html5QrcodeSupportedFormats.QR_CODE;
+                    } else if (supplier === "Digikey") {
+                        QRformat = Html5QrcodeSupportedFormats.DATA_MATRIX;
+                    }
+
+                    // 重新初始化二维码扫描器
+                    if (html5QrCode) {
+                        html5QrCode.stop().then(() => {
+                            html5QrCode = new Html5Qrcode("qr-reader", { formatsToSupport: [QRformat] });
+                            html5QrCode.start(
+                                { facingMode: "environment" }, // 使用后置摄像头
+                                {
+                                    fps: 30, // 每秒扫描次数
+                                    qrbox: 250, // 扫描框大小
+                                },
+                                (decodedText, decodedResult) => {
+                                    // 处理扫码结果
+                                    updateDocumentData(supplier, decodedText);
+
+                                    // 停止扫描
+                                    html5QrCode.stop();
+                                    Swal.close();
+                                },
+                                (errorMessage) => {
+                                    console.log(errorMessage);
+                                }
+                            );
+                        }).catch((err) => {
+                            console.error("停止二维码扫描失败", err);
+                        });
+                    }
+                });
+
+                // 初始扫描器启动
+                const supplier = supplierSelect.value;
+                if (supplier === "LCSC") {
+                    QRformat = Html5QrcodeSupportedFormats.QR_CODE;
+                } else if (supplier === "Digikey") {
+                    QRformat = Html5QrcodeSupportedFormats.DATA_MATRIX;
+                }
+
+                html5QrCode = new Html5Qrcode("qr-reader", { formatsToSupport: [QRformat] });
+                html5QrCode.start(
+                    { facingMode: "environment" }, // 使用后置摄像头
+                    {
+                        fps: 30, // 每秒扫描次数
+                        qrbox: 250, // 扫描框大小
+                    },
+                    (decodedText, decodedResult) => {
+                        // 处理扫码结果
+                        updateDocumentData(supplier, decodedText);
+                        // 停止扫描
+                        html5QrCode.stop();
+                    },
+                    (errorMessage) => {
+                        console.log(errorMessage);
+                    }
+                ).catch(err => {
+                    Swal.fire({
+                        title: 'Can not access the camera',
+                        text: err,
+                        icon: 'error'
+                    });
+                });
+            },
+        });
+    }
+
+</script>
+<script>
+    async function updateNewData(){
+        Swal.fire({
+          title: "Wait a minute...",
+          text: "Make sure the column names of your Excel file to be like this?",
+          imageUrl: "{{ url_for('static', filename='pics/BOMexample.png') }}",
+          imageAlt: "Custom image",
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: "<i class=\"fa fa-thumbs-up\"></i> OK! Let's go!",
+          denyButtonText: "<i class=\"fa fa-thumbs-down\"></i> wait... I need to edit",
+          footer: `<a href="{{ url_for('static', filename='exampleFiles/BOMexample.xlsx') }}" target="_blank">Download the Example</a>`
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const {value: file} = await Swal.fire({
+              title: "Choose your Excel file",
+              input: "file",
+              inputAttributes: {
+                "accept": "*",
+                "aria-label": "BillOfMaterial.xlsx"
+              }
+            });
+              if (file) {
+                Swal.fire({
+                  title: "Wait a moment",
+                  text: "Processing your data :)",
+                  icon: "question"
+                });
+                var formData = new FormData();
+                formData.append('file', file);
+                fetch('/api/uploadBOM', {
+                  method: 'POST',
+                  body: formData
+                }).then(response => {
+                  if (response.ok) {
+                    console.log('upload success');
+                    Swal.fire({
+                      title: "Uploaded",
+                      icon: "success",
+                      timer: 1500
+                    });
+                  } else {
+                    Swal.fire({
+                      title: "Failed",
+                      text: "Failed to upload or process data. Check your Internet connection and the column names of your uploaded file.",
+                      icon: "error"
+                    });
+                  }
+                });
+              } else {
+                console.log("No Files selected")
+              }
+
+          } else if (result.isDenied) {
+            Swal.fire({
+              title: "Cancelled",
+              text: "Don't worry, edit your file then upload again :)",
+              icon: "info"
+            });
+          }
+        });
+    }
+</script>
+<script>
+    function submitTable(){
+        if((document.getElementById('m_name').value === "") && (document.getElementById('mpn').value === "")){
+            // 名字和MPN至少要有一个
+            Swal.fire({
+              title: "Hey!",
+              text: "You must enter the Name or the MPN of the part!",
+              icon: "warning"
+            });
+        } else {
+            const payload = {
+                m_name: document.getElementById('m_name').value,
+                m_class: document.getElementById('m_class').value,
+                footprint: document.getElementById('footprint').value,
+                quantity: document.getElementById('quantity').value,
+                mpn: document.getElementById('mpn').value,
+                manufacture: document.getElementById('manufacture').value,
+                spn: document.getElementById('spn').value,
+                supplier: document.getElementById('supplier').value,
+                position: document.getElementById('position').value,
+                user_comment: document.getElementById('user_comment').value,
+                buy_time: document.getElementById('buy_time').value
+            }
+            // 向后端API发送请求
+            fetch('/api/addNewMaterial', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('成功:', data);
+                if(data.status === 0){  // 新插入
+                    Swal.fire({
+                      title: "Success",
+                      icon: "success",
+                      timer: 1500
+                    }).then((result) => {
+                      location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                      title: "Already exists...",
+                      text: "The MPN of your material entered is already exists. But don't worry, we added the quantity to original material.",
+                      icon: "info",
+                    }).then((result) => {
+                      location.reload();
+                    });
+                }
+            })
+            .catch((error) => {
+                Swal.fire({
+                        title: 'Something wrong happened...',
+                        text: error,
+                        icon: 'error'
+                    });
+            });
+        }
+    }
+</script>
+{% endblock %}

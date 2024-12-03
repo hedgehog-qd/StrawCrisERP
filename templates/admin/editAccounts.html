@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Management{% endblock %}
+
+{% block position %}
+    <li class="breadcrumb-item"><a href="#">Admin</a></li>
+    <li class="breadcrumb-item active">Management</li>
+{% endblock %}
+
+{% block page %}Admin Management Page{% endblock %}
+
+{% block sidebar %}
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Check
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/" class="nav-link">
+                  <i class="nav-icon fas fa-th"></i>
+                  <p>Home</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/search" class="nav-link">
+                  <i class="nav-icon fas fa-search"></i>
+                  <p>Search for Material</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/viewall" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>View All</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/addnew" class="nav-link">
+                  <i class="far fa-plus-square nav-icon"></i>
+                  <p>Add New Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/edit" class="nav-link">
+                  <i class="far fa-edit nav-icon"></i>
+                  <p>Edit Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/checkout" class="nav-link">
+                  <i class="far fa-file nav-icon"></i>
+                  <p>Check Out</p>
+                </a>
+              </li>
+            </ul>
+
+          </li>
+
+        </ul>
+      </nav>
+{% endblock %}
+
+{% block main %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-8">
+              <div class="card card-info">
+            <div class="card-header">
+                <h3 class="card-title">User Account Table</h3>
+            </div>
+    <!-- /.card-header -->
+            <div class="card-body p-0">
+            <table class="table table-striped projects" id="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 1%">UID</th>
+                        <th style="width: 35%">USER NAME</th>
+                        <th style="width: 15%">PASSWORD</th>
+                        <th style="width: 4%" class="text-center">ROLE</th>
+                        <th style="width: 45%"></th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- 数据将通过JavaScript动态插入 -->
+                </tbody>
+            </table>
+        </div>
+    <!-- /.card-body -->
+                  <!-- /.card-footer -->
+    </div>
+    </div>
+              <div class="col-md-4">
+                <div class="sticky-card" style="position: sticky; top: 20px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Add New User</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Roles:</p>
+                            <p>Admin: Admin can manage other users</p>
+                            <p>User: User can make editions to the data</p>
+                            <p>Guest: Guest can only view the data</p>
+                            <button class="btn btn-outline-info" id="updateNewData" onclick="addNewUser()">ADD NEW USER</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+    </section>
+
+{% endblock %}
+{% block js %}
+<!-- DataTables  & Plugins -->
+<script src="{{ url_for('static', filename='plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<script>
+  $(function () {
+    $('data-table').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
+<script>
+    let globalVar_json = [];
+    function deleteDataRow(uid){
+        let resultRow = globalVar_json.find(row => row[0] === uid)
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Delete user [" + resultRow[1] + "] with uid: " + uid + " ",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "DELETE"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const deleteURL = `/admin/deleteUser?uid=${encodeURIComponent(uid)}`
+                const responsecheck = await fetch(deleteURL);
+                if (responsecheck.ok) {
+                    updatePage();
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "The user (uid: " + uid + " ) has been deleted",
+                        icon: "success"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "ERROR",
+                        text: "Check the Internet connection",
+                        icon: "error"
+                    });
+                }
+            } else {
+                Swal.fire({
+                        title: "Cancelled",
+                        text: "Operation Cancelled",
+                        icon: "info"
+                    });
+            }
+        });
+
+    }
+    async function editTags(uid) {
+        // 查找对应的行数据
+        let resultRow = globalVar_json.find(row => row[0] === uid);
+        const user_name = resultRow[1];
+        const passwd = resultRow[2];
+        // 弹出 SweetAlert2 窗口
+        const {value: newTag} = await Swal.fire({
+            title: "Edit user with uid: " + uid + " ",
+            html: `
+                <input type="text" id="new-username" class="swal2-input" placeholder="User Name" value="${user_name}">
+                <input type="text" id="new-passwd" class="swal2-input" placeholder="Password" value="${passwd}">
+                <select id="new-rule-select" class="swal2-select" >
+                    <option value="1">User</option>
+                    <option value="2">Guest</option>
+                    <option value="0">Admin</option>
+                </select>
+            <!--</div>-->
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            cancelButtonText: 'Cancel',
+        });
+        // 如果用户点击提交
+        if (newTag !== undefined) {
+            const newUserName = document.getElementById('new-username').value.trim();
+            const newPasswd = document.getElementById('new-passwd').value.trim();
+            const newRole = document.getElementById('new-rule-select').value;
+            // 发送请求
+            await editUserData(uid, newUserName, newPasswd, newRole);
+        }
+    }
+    async function editUserData(uid, newUserName, newPasswd, newRole){
+        const url = "/admin/updateUser?uid=" + uid + "&uname=" + newUserName + "&passwd=" + newPasswd + "&role=" + newRole;
+        const response = await fetch(url, {
+            method: 'GET'
+        });
+        if(response.ok){
+            console.log("成功");
+            updatePage();
+            Swal.fire({
+                      title: "Success",
+                      icon: "success"
+                    });
+        } else {
+            console.error('请求失败:', response.status);
+            Swal.fire({
+                      title: "Internet ERROR!",
+                      icon: "error"
+                    });
+        }
+    }
+    function updateTable(data){
+        const tableBody = document.getElementById('table-body');
+        tableBody.innerHTML = ''; // 清空表格内容
+        data.forEach(item => {
+            // 解构数据项
+            const [uid, user_name, passwd, role] = item;
+
+            // 创建行元素
+            const row = document.createElement('tr');
+
+            // 添加 UID 列
+            const idCell = document.createElement('td');
+            idCell.textContent = uid;
+            row.appendChild(idCell);
+
+            // 添加用户名列
+            const sampleCell = document.createElement('td');
+            sampleCell.innerHTML = `<a>${user_name}</a>`;
+            row.appendChild(sampleCell);
+
+            // 添加用户名列
+            const passwdCell = document.createElement('td');
+            passwdCell.innerHTML = `<a>${passwd}</a>`;
+            row.appendChild(passwdCell);
+
+            // 添加用户组列
+            const userGroupCell = document.createElement('td');
+            if(role === 0 || role === "0"){  // Admin
+                userGroupCell.innerHTML = '<span class="badge badge-danger">Admin</span>';
+            } else {
+                if(role === 1 || role === "1"){  // User
+                    userGroupCell.innerHTML = '<span class="badge badge-success">User</span>';
+                } else {  // Guest
+                    userGroupCell.innerHTML = '<span class="badge badge-info">Guest</span>';
+                }
+            }
+            row.appendChild(userGroupCell);
+
+            // 添加操作列
+            const actionsCell = document.createElement('td');
+            actionsCell.className = 'project-actions text-right';
+            if(uid === 1){
+                actionsCell.innerHTML = `
+                    <p>ROOT Admin is not allowed to be deleted or edited</p>
+                `;
+            } else {
+                actionsCell.innerHTML = `
+                <a class="btn btn-info btn-sm" href="#" onclick="editTags(${uid})"><i class="fas fa-pencil-alt"></i> Edit</a>
+                <a class="btn btn-danger btn-sm" href="#" onclick="deleteDataRow(${uid})"><i class="fas fa-trash"></i> Delete</a>
+            `;
+            }
+            row.appendChild(actionsCell);
+
+            // 将行添加到表格
+            tableBody.appendChild(row);
+        });
+    }
+    function updatePage(){
+        fetch('/admin/getAllUsers', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('成功! data:', data);
+            // 更新表格
+            const tableList = data.result || [];
+            globalVar_json = tableList;
+            updateTable(tableList);
+            // 处理返回的数据
+        })
+    }
+    updatePage()
+</script>
+<script>
+    async function addNewUser() {
+        // 弹出 SweetAlert2 窗口
+        const {value: addTag} = await Swal.fire({
+            title: "Add New User",
+            html: `
+                <input type="text" id="add-username" class="swal2-input" placeholder="User Name">
+                <input type="text" id="add-passwd" class="swal2-input" placeholder="Password">
+                <select id="add-rule-select" class="swal2-select" >
+                    <option value="1">User</option>
+                    <option value="2">Guest</option>
+                    <option value="0">Admin</option>
+                </select>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            cancelButtonText: 'Cancel',
+        });
+        // 如果用户点击提交
+        if (addTag !== undefined) {
+            const addUserName = document.getElementById('add-username').value.trim();
+            const addPasswd = document.getElementById('add-passwd').value.trim();
+            const addRole = document.getElementById('add-rule-select').value;
+            // 发送请求
+            await addNewUserData(addUserName, addPasswd, addRole);
+        }
+    }
+    async function addNewUserData(newUserName, newPasswd, newRole){
+        const url = "/admin/addUser?uname=" + newUserName + "&passwd=" + newPasswd + "&role=" + newRole;
+        const response = await fetch(url, {
+            method: 'GET'
+        });
+        if(response.ok){
+            console.log("成功");
+            updatePage();
+            const jsondata = await response.json();
+            console.log(jsondata);
+            if(jsondata.get_status === 1){
+                Swal.fire({
+                      title: "User already exist!",
+                      text: "The user name you input is already exist. Don't worry, nothing has been changed.",
+                      icon: "warning"
+                    });
+            } else {
+                Swal.fire({
+                      title: "Success",
+                      icon: "success"
+                    });
+            }
+        } else {
+            console.error('请求失败:', response.status);
+            Swal.fire({
+                      title: "Internet ERROR!",
+                      icon: "error"
+                    });
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,591 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block position %}
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item active">Checkout</li>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<!-- BS Stepper -->
+<link rel="stylesheet" href="{{ url_for('static', filename='plugins/bs-stepper/css/bs-stepper.min.css') }}">
+{% endblock %}
+
+{% block page %}Checkout{% endblock %}
+
+{% block sidebar %}
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Check
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/" class="nav-link">
+                  <i class="nav-icon fas fa-th"></i>
+                  <p>Home</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/search" class="nav-link">
+                  <i class="nav-icon fas fa-search"></i>
+                  <p>Search for Material</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/viewall" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>View All</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/addnew" class="nav-link">
+                  <i class="far fa-plus-square nav-icon"></i>
+                  <p>Add New Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/edit" class="nav-link">
+                  <i class="far fa-edit nav-icon"></i>
+                  <p>Edit Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/checkout" class="nav-link active">
+                  <i class="far fa-file nav-icon"></i>
+                  <p>Check Out</p>
+                </a>
+              </li>
+            </ul>
+
+          </li>
+
+        </ul>
+      </nav>
+{% endblock %}
+
+{% block main %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+        <div class="col-md-6">
+
+    <div class="card card-info">
+    <div class="card-header">
+        <h3 class="card-title">Checkout BOM</h3>
+    </div>
+    <!-- /.card-header -->
+    <!-- form start -->
+            <div class="card-body">
+                <div class="bs-stepper">
+                  <div class="bs-stepper-header" role="tablist">
+                    <!-- your steps here -->
+                    <div class="step" data-target="#preparedata-part">
+                      <button type="button" class="step-trigger" role="tab" aria-controls="preparedata-part" id="preparedata-part-trigger">
+                        <span class="bs-stepper-circle">1</span>
+                        <span class="bs-stepper-label">Prepare Data</span>
+                      </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#runtype-part">
+                      <button type="button" class="step-trigger" role="tab" aria-controls="runtype-part" id="runtype-part-trigger">
+                        <span class="bs-stepper-circle">2</span>
+                        <span class="bs-stepper-label">Upload File</span>
+                      </button>
+                    </div>
+                      <div class="line"></div>
+                      <div class="step" data-target="#submit-part">
+                      <button type="button" class="step-trigger" role="tab" aria-controls="submit-part" id="submit-part-trigger">
+                        <span class="bs-stepper-circle">3</span>
+                        <span class="bs-stepper-label">Result</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="bs-stepper-content">
+                    <!-- your steps content here -->
+                    <div id="preparedata-part" class="content" role="tabpanel" aria-labelledby="preparedata-part-trigger">
+                        <div class="form-group row border-top">
+                            <p class="col-form-label"><b>Already have a BOM sheet?</b></p>
+                            <p class="card-text">Great! Let's upload the sheet and check what we already have.</p>
+                        </div>
+                      <br>
+                      <br>
+                      <br>
+                      <button class="btn btn-primary" onclick="stepper.next()">Okay! →</button>
+                    </div>
+                    <div id="runtype-part" class="content" role="tabpanel" aria-labelledby="runtype-part-trigger">
+                      <div class="form-group">
+                          <p class="col-form-label"><b>Hey!</b></p>
+                          <p class="card-text">Before you upload the file, let's check the column names.</p>
+                          <p class="card-text">Remember, your BOM sheet <b>MUST</b> have these 2 columns:</p>
+                          <p class="card-text">* MPN</p>
+                          <p class="card-text">* Quantity</p>
+                          <p class="card-text">Please double check your file before uploading.</p>
+                      </div>
+                      <div class="form-group">
+                        <p class="card-text">Click "Upload" to upload file</p>
+                      </div>
+                      <button class="btn btn-primary btn-success" onclick="stepper.previous()">Back...</button>
+                      <button class="btn btn-primary" onclick="checkStep2()">Upload</button>
+                    </div>
+                      <div id="submit-part" class="content" role="tabpanel" aria-labelledby="submit-part-trigger">
+                          <div class="form-group">
+                              <label for="data-table-have">Things we already have:</label>
+                                <table id="data-table-have" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                              <th>MPN</th>
+                                              <th>QUANTITY</th>
+                                            </tr>
+                                        </thead>
+                                    <tbody id="table-body-have">
+                                        <!-- 数据将通过JavaScript动态插入 -->
+                                    </tbody>
+                                </table>
+                          </div>
+                          <div class="form-group border-top">
+                              <label for="data-table-donthave">Things we don't have or we don't have enough:</label>
+                                <table id="data-table-donthave" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                              <th>MPN</th>
+                                              <th>QUANTITY</th>
+                                            </tr>
+                                        </thead>
+                                    <tbody id="table-body-donthave">
+                                        <!-- 数据将通过JavaScript动态插入 -->
+                                    </tbody>
+                                </table>
+                          </div>
+
+                      <button class="btn btn-primary btn-success" onclick="stepper.previous()">Back...</button>
+                      <button class="btn btn-primary" onclick="startRun()">Checkout existing items</button>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+                <!-- /.card-footer -->
+    </div>
+            <!-- /.card -->
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">One-time Use</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="form-group">
+                  <p class="col-form-label"><b>Just wanna use the part for one time?</b></p>
+                  <p class="card-text">Fill in the MPN with the quantity you want</p>
+                  <p class="card-text">You can also try to scan the bar code for Auto-fill MPN if it is on the bag</p>
+                </div>
+                  <div class="form-group">
+                    <label for="mpn" class="col-sm-2 col-form-label">MPN</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="mpn" name="mpn" placeholder="# Manufacture Part Number">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="quantity" class="col-sm-2 col-form-label">Quantity</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="quantity" name="quantity" placeholder="How many do you want?">
+                    </div>
+                  </div>
+                <div class="card-footer">
+                  <button class="btn btn-info" onclick="submitOneTimeUse()">Submit</button>
+                  <button class="btn btn-outline-success" onclick="scanQRcode()">QR Scanner</button>
+                </div>
+              </div>
+          <!-- /.col-md-6 -->
+          <!-- /.col-md-6 -->
+        </div>
+            </div>
+
+      </div>
+          </div>
+    </section>
+
+{% endblock %}
+{% block js %}
+<!-- DataTables  & Plugins -->
+<script src="{{ url_for('static', filename='plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<!-- Html5-QRCode -->
+<script src="{{ url_for('static', filename='plugins/html5-qrcode/html5-qrcode.min.js') }}"></script>
+<!-- BS-Stepper -->
+<script src="{{ url_for('static', filename='plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
+
+<script>
+     // BS-Stepper Init
+  document.addEventListener('DOMContentLoaded', function () {
+    window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+  })
+</script>
+<script>
+$(document).ready(function() {
+  $('#data-table-have').DataTable({
+    "paging": true,  // 启用分页
+    "searching": true,  // 启用搜索功能
+    "ordering": false,  // 启用排序功能
+    "info": true,  // 启用页脚信息显示
+  });
+  $('#data-table-donthave').DataTable({
+    "paging": true,  // 启用分页
+    "searching": true,  // 启用搜索功能
+    "ordering": false,  // 启用排序功能
+    "info": true,  // 启用页脚信息显示
+  });
+});
+</script>
+
+<script>
+    async function submitOneTimeUse() {
+        const mpn = document.getElementById('mpn').value;
+        const quantity = document.getElementById('quantity').value;
+        if (mpn === "" || quantity === "") {
+            Swal.fire({
+                title: "Hey!",
+                text: "You must enter the MPN and the Quantity of the part!",
+                icon: "warning"
+            });
+        } else {
+            const fetchURL = "/api/checkoutOnetimeUsewithMPN?mpn=" + encodeURIComponent(mpn) + "&quantity=" + encodeURIComponent(quantity);
+            const responsecheck = await fetch(fetchURL, {
+                method: 'GET'
+            });
+            const datacheck = await responsecheck.json();
+            if(responsecheck.ok) {
+                if(datacheck.status === 0){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Your changes have been saved",
+                        icon: "success"
+                      }).then((result) => {
+                          location.reload();
+                    })
+                } else {
+                    if(datacheck.status === 1){
+                        Swal.fire({
+                            title: 'Does not exist...',
+                            text: "It seems we don't have this part... Check your input?",
+                            icon: 'warning'
+                        });
+                    } else {
+                        if(datacheck.status === 2){
+                            const existing_num = datacheck.existing_amount;
+                            Swal.fire({
+                                title: 'Too many...',
+                                text: "We only have " + existing_num + " , but you requested " + quantity + " .",
+                                icon: 'warning'
+                            });
+                        }
+                    }
+                }
+            } else {
+                Swal.fire({
+                        title: 'Something wrong happened...',
+                        text: "Maybe check the Internet connection or the server status?",
+                        icon: 'error'
+                    });
+            }
+        }
+    }
+</script>
+<script>
+    function updateDocumentData(supplier, data){
+        console.log(supplier);
+        console.log(data);
+        Swal.fire({
+              title: 'Success!',
+              text: 'Successfully scanned the QR code',
+              icon: 'success'
+            });
+        const mpn = document.getElementById('mpn');
+        if(supplier === "LCSC"){
+            let str = data.replace(/[{}]/g, '');
+            // 使用逗号分隔每一对键值
+            let pairs = str.split(',');
+            // 遍历每一对键值，查找 'pc'
+            let pmValue = '';
+            for (let pair of pairs) {
+              let [key, value] = pair.split(':');  // 将每对键值分开
+              if (key === 'pm') {
+                pmValue = value;  // 找到pc对应的值
+              }
+            }
+            mpn.value = pmValue;
+            // 输出结果
+            console.log(pmValue);
+        }
+        if(supplier === "Digikey"){
+            // 替换控制字符 GS (ASCII 29) 为一个可识别的分隔符
+            let cleanString = data.replace(/\x1d/g, ',');  // 逗号替代
+            let fields = cleanString.split(',');
+            let field1P = '';  // MPN
+            fields.forEach(field => {
+              if (field.startsWith('1P')) {
+                field1P = field.substring(2);  // 去掉开头的 "1P"
+              }
+            });
+            console.log('Field starting with 1P:', field1P);
+            mpn.value = field1P;
+        }
+    }
+
+    function scanQRcode() {
+        let html5QrCode; // 声明一个全局变量，保存二维码扫描实例
+        Swal.fire({
+            title: 'Scan for QR Code',
+            html: `
+                <select id="supplier-selected" class="swal2-select">
+                    <option value="LCSC">LCSC</option>
+                    <option value="Digikey">Digikey</option>
+                </select>
+                <div id="qr-reader" style="width: 100%; height: 300px;"></div>
+            `,
+            showCancelButton: true,
+            showConfirmButton: false,
+            willOpen: () => {
+                const supplierSelect = document.getElementById('supplier-selected');
+                let QRformat = Html5QrcodeSupportedFormats.QR_CODE; // 默认格式为 QR_CODE
+
+                // 监听下拉栏选择变化
+                supplierSelect.addEventListener('change', () => {
+                    const supplier = supplierSelect.value;
+                    if (supplier === "LCSC") {
+                        QRformat = Html5QrcodeSupportedFormats.QR_CODE;
+                    } else if (supplier === "Digikey") {
+                        QRformat = Html5QrcodeSupportedFormats.DATA_MATRIX;
+                    }
+
+                    // 重新初始化二维码扫描器
+                    if (html5QrCode) {
+                        html5QrCode.stop().then(() => {
+                            html5QrCode = new Html5Qrcode("qr-reader", { formatsToSupport: [QRformat] });
+                            html5QrCode.start(
+                                { facingMode: "environment" }, // 使用后置摄像头
+                                {
+                                    fps: 30, // 每秒扫描次数
+                                    qrbox: 250, // 扫描框大小
+                                },
+                                (decodedText, decodedResult) => {
+                                    // 处理扫码结果
+                                    updateDocumentData(supplier, decodedText);
+
+                                    // 停止扫描
+                                    html5QrCode.stop();
+                                    Swal.close();
+                                },
+                                (errorMessage) => {
+                                    console.log(errorMessage);
+                                }
+                            );
+                        }).catch((err) => {
+                            console.error("停止二维码扫描失败", err);
+                        });
+                    }
+                });
+
+                // 初始扫描器启动
+                const supplier = supplierSelect.value;
+                if (supplier === "LCSC") {
+                    QRformat = Html5QrcodeSupportedFormats.QR_CODE;
+                } else if (supplier === "Digikey") {
+                    QRformat = Html5QrcodeSupportedFormats.DATA_MATRIX;
+                }
+
+                html5QrCode = new Html5Qrcode("qr-reader", { formatsToSupport: [QRformat] });
+                html5QrCode.start(
+                    { facingMode: "environment" }, // 使用后置摄像头
+                    {
+                        fps: 30, // 每秒扫描次数
+                        qrbox: 250, // 扫描框大小
+                    },
+                    (decodedText, decodedResult) => {
+                        // 处理扫码结果
+                        updateDocumentData(supplier, decodedText);
+                        // 停止扫描
+                        html5QrCode.stop();
+                    },
+                    (errorMessage) => {
+                        console.log(errorMessage);
+                    }
+                ).catch(err => {
+                    Swal.fire({
+                        title: 'Can not access the camera',
+                        text: err,
+                        icon: 'error'
+                    });
+                });
+            },
+        });
+    }
+</script>
+<script>
+    let thingswehave_json = [];
+
+    async function checkStep2(){
+        Swal.fire({
+          title: "Double check...",
+          text: "Please make sure your file has exactly \"Quantity\" and \"MPN\" columns",
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: "<i class=\"fa fa-thumbs-up\"></i> OK! Let's go!",
+          denyButtonText: "<i class=\"fa fa-thumbs-down\"></i> wait... I need to edit",
+          footer: `<a href="{{ url_for('static', filename='exampleFiles/BOMexample.xlsx') }}" target="_blank">Download the Example</a>`
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const {value: file} = await Swal.fire({
+              title: "Choose your Excel file",
+              input: "file",
+              inputAttributes: {
+                "accept": "*",
+                "aria-label": "BOM.xlsx"
+              }
+            });
+              if (file) {
+                Swal.fire({
+                  title: "Wait a moment",
+                  text: "Processing your data :)",
+                  icon: "question"
+                });
+                var formData = new FormData();
+                formData.append('file', file);
+                const responsecheck = await fetch('/api/checkoutUploadExcel', {
+                  method: 'POST',
+                  body: formData
+                });
+                const datacheck = await responsecheck.json();
+                if (responsecheck.ok && datacheck.status === 0) {
+                    console.log('upload success');
+                    let bill_have = datacheck.bill_have;
+                    console.log(bill_have);
+                    let bill_donthave = datacheck.bill_donthave;
+                    thingswehave_json = bill_have;
+                    updateTable(bill_have, bill_donthave);
+                    stepper.next();  // 此处解析完成后切换到下一个栏给用户展示详细的表格比较数据
+                    Swal.fire({
+                        title: "Success",
+                        text: "Check the result on next step",
+                        icon: "success",
+                        timer: 1500
+                      })
+                } else {
+                    Swal.fire({
+                      title: "Failed",
+                      text: "Failed to upload or process data. Check your Internet connection and the column names of your uploaded file.",
+                      icon: "error"
+                    });
+                }
+
+              } else {
+                console.log("No Files selected")
+              }
+
+          } else if (result.isDenied) {
+            Swal.fire({
+              title: "Cancelled",
+              text: "Don't worry, edit your file then upload again :)",
+              icon: "info"
+            });
+          }
+        });
+    }
+
+    function updateTable(bill_have, bill_donthave){
+        const tablehave = $('#data-table-have').DataTable();
+        const tabledonthave = $('#data-table-donthave').DataTable();
+        tablehave.clear();
+        tabledonthave.clear();
+        bill_have.forEach(row => {
+            // 假设每一行数据的结构与表头顺序一致
+            const rowData = [
+              row[0],   // MPN
+              row[1],   // QUANTITY
+            ];
+            tablehave.row.add(rowData);  // 向表格中添加数据
+        });
+        // 重新渲染表格
+        tablehave.draw();
+        bill_donthave.forEach(row => {
+            // 假设每一行数据的结构与表头顺序一致
+            const rowData = [
+              row[0],   // MPN
+              row[1],   // QUANTITY
+            ];
+            tabledonthave.row.add(rowData);  // 向表格中添加数据
+        });
+        // 重新渲染表格
+        tabledonthave.draw();
+    }
+
+    function startRun(){
+        Swal.fire({
+          title: "Double check...",
+          text: "Please make sure your file has exactly \"Quantity\" and \"MPN\" columns",
+          showDenyButton: true,
+          showCancelButton: false,
+          confirmButtonText: "<i class=\"fa fa-thumbs-up\"></i> OK!",
+          denyButtonText: "<i class=\"fa fa-thumbs-down\"></i> Cancel",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const payload = {
+                    data: thingswehave_json
+                }
+                // 向后端API发送请求
+                fetch('/api/checkoutConfirmHave', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                }).then(() => {
+                    Swal.fire({
+                        title: "Success",
+                        text: "Your changes have been saved",
+                        icon: "success"
+                      }).then((result) => {
+                          location.reload();
+                    })
+                })
+                .catch((error) => {
+                    console.error('错误:', error);
+                    Swal.fire({
+                        title: "ERROR",
+                        text: "Check the Internet connection and your data input?",
+                        icon: "error"
+                      });
+                });
+            } else {
+                Swal.fire({
+                  title: "Cancelled",
+                  text: "Don't worry, nothing has been changed :)",
+                  icon: "info"
+                });
+            }
+        });
+    }
+</script>
+{% endblock %}

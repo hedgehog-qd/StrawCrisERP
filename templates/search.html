@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+
+{% block title %}Search{% endblock %}
+
+{% block position %}
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item active">Search</li>
+{% endblock %}
+
+{% block page %}Search{% endblock %}
+
+{% block sidebar %}
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Check
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/" class="nav-link">
+                  <i class="nav-icon fas fa-th"></i>
+                  <p>Home</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/search" class="nav-link active">
+                  <i class="nav-icon fas fa-search"></i>
+                  <p>Search for Material</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/viewall" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>View All</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/addnew" class="nav-link">
+                  <i class="far fa-plus-square nav-icon"></i>
+                  <p>Add New Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/edit" class="nav-link">
+                  <i class="far fa-edit nav-icon"></i>
+                  <p>Edit Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/checkout" class="nav-link">
+                  <i class="far fa-file nav-icon"></i>
+                  <p>Check Out</p>
+                </a>
+              </li>
+            </ul>
+
+          </li>
+
+        </ul>
+      </nav>
+{% endblock %}
+
+{% block main %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-8">
+              <div class="card card-info">
+    <div class="card-header">
+        <h3 class="card-title">Search Result Table</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+    <table id="data-table" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                  <th style="width: 1%">#</th>
+                  <th>NAME</th>
+                  <th>CLASS</th>
+                  <th>FOOTPRINT</th>
+                  <th>MPN</th>
+                  <th>MANUFACTURE</th>
+                  <th>SPN</th>
+                  <th>SUPPLIER</th>
+                  <th>QUANTITY</th>
+                  <th>POSITION</th>
+                  <th>COMMENT</th>
+                  <th>BUY TIME</th>
+                </tr>
+            </thead>
+        <tbody id="table-body">
+            <!-- 数据将通过JavaScript动态插入 -->
+        </tbody>
+    </table>
+</div>
+    <!-- /.card-body -->
+                  <!-- /.card-footer -->
+    </div>
+    </div>
+
+        <div class="col-md-4">
+        <div class="sticky-card" style="position: sticky; top: 20px;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Use TAGs to Search</h3>
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <input type="text" id="search-input" class="form-control" placeholder="Type in the TAG, then press ENTER">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" id="add-tag-btn">Add</button>
+                        </div>
+                    </div>
+                    <div id="tags-container" class="mb-3"></div>
+                    <button class="btn btn-success" id="search-btn">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+
+</div>
+
+      </div>
+    </section>
+
+{% endblock %}
+{% block js %}
+<!-- DataTables  & Plugins -->
+<script src="{{ url_for('static', filename='plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/jszip/jszip.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+<script>
+$(document).ready(function() {
+  $('#data-table').DataTable({
+    "paging": true,  // 启用分页
+    "searching": false,  // 启用搜索功能
+    "ordering": true,  // 启用排序功能
+    "info": true,  // 启用页脚信息显示
+    "scrollX": true
+  });
+
+  // 加载数据
+  refreshTable();
+});
+</script>
+<script>
+function refreshTableData(data) {
+  // 清空现有的表格数据
+  const table = $('#data-table').DataTable();
+  table.clear();
+
+  // 遍历并插入新数据
+  data.forEach(row => {
+    // 假设每一行数据的结构与表头顺序一致
+    const rowData = [
+      row[0],   // # (序号)
+      row[1],   // NAME
+      row[2],   // CLASS
+      row[3],   // FOOTPRINT
+      row[5],   // MPN
+      row[6],   // MANUFACTURE
+      row[7],   // SPN
+      row[8],   // SUPPLIER
+      row[4],   // QUANTITY
+      row[9],   // POSITION
+      row[10],  // COMMENT
+      row[11]   // BUY TIME
+    ];
+    table.row.add(rowData);  // 向表格中添加数据
+  });
+
+  // 重新渲染表格
+  table.draw();
+}
+async function refreshTable() {
+  const url = "/api/search"
+  const payload = {
+                search: []
+            };
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload)
+  });
+  if(response.ok){
+    const jsondata = await response.json();
+    const data = jsondata.result || [];
+    console.log(data);
+    refreshTableData(data);
+  } else {
+    console.error('请求失败:', response.status);
+            Swal.fire({
+                      title: "Internet ERROR!",
+                      icon: "error"
+                    });
+  }
+}
+//refreshTable();
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+        const tagsContainer = document.getElementById('tags-container');
+        const searchInput = document.getElementById('search-input');
+        const addTagBtn = document.getElementById('add-tag-btn');
+        const searchBtn = document.getElementById('search-btn');
+        const tags = [];
+
+        // 添加标签
+        addTagBtn.addEventListener('click', () => {
+            const tagValue = searchInput.value.trim();
+            if (tagValue && !tags.includes(tagValue)) {
+                tags.push(tagValue);
+                updateTagsDisplay();
+                searchInput.value = ''; // 清空输入框
+            }
+        });
+
+        searchInput.addEventListener('keypress', (event) =>{
+           if(event.key === "Enter"){
+               const tagValue = searchInput.value.trim();
+                if (tagValue && !tags.includes(tagValue)) {
+                    tags.push(tagValue);
+                    updateTagsDisplay();
+                    searchInput.value = ''; // 清空输入框
+                    event.preventDefault();  // 阻止默认动作例如直接提交
+                }
+           }
+        });
+
+        // 更新标签显示
+        function updateTagsDisplay() {
+            tagsContainer.innerHTML = ''; // 清空现有标签
+            tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `${tag} <span class="remove-tag" onclick="removeTag('${tag}')"> × </span>`;
+                tagsContainer.appendChild(tagElement);
+            });
+        }
+
+        // 删除标签
+        window.removeTag = function(tag) {
+            const index = tags.indexOf(tag);
+            if (index > -1) {
+                tags.splice(index, 1);
+                updateTagsDisplay();
+            }
+        };
+
+        // 搜索
+        searchBtn.addEventListener('click', () => {
+            const payload = {
+                search: tags
+            };
+
+            // 向后端API发送请求
+            fetch('/api/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('成功:', data);
+                // 更新表格
+                const tableList = data.result || [];
+                refreshTableData(tableList);
+                // 处理返回的数据
+            })
+            .catch((error) => {
+                console.error('错误:', error);
+                Swal.fire({
+                    title: "ERROR",
+                    text: "Check the Internet connection?",
+                    icon: "error"
+                  });
+            });
+        });
+    });
+</script>
+{% endblock %}
