@@ -50,7 +50,7 @@ The system allows easy management of inventory, supports scanning to add compone
    db_host = "localhost"        # MySQL host
    db_port = 3306               # MySQL port
    db_user = "strawcris"        # MySQL username
-   db_passwd = "password"      # Password for the user
+   db_passwd = "password"       # Password for the user
    db_name = "strawcriserp"     # Database name
    ``` 
 
@@ -90,6 +90,9 @@ When you finish your design or start implementation, you can retrieve items from
 The system will compare which components are in stock, which are missing, or if the quantity is insufficient. After the comparison, you can choose to subtract the inventory of the components listed in the BOM.  
 You can also retrieve items one by one by entering the MPN (or scanning) and the required quantity, then clicking submit.  
 ![Checkout Page](/images/checkout.png)
+### Admin Panel
+You can easily manage the users with user group settings in this page. "Admin" users can manage users, "User" users can make editions to data, and "Guest" users can only view the data (read-only).   
+![Admin Panel](/images/adminpanel.png)
 
 ## Conclusion
 Feel free to try it out! If you encounter any issues, please submit an issue. Thank you!
